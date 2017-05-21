@@ -26,11 +26,21 @@ public:
   ///* state vector: [pos1 pos2 vel_abs yaw_angle yaw_rate] in SI units and rad
   VectorXd x_;
 
-  ///* state covariance matrix
+  //create example vector for mean predicted measurement
+  VectorXd z_pred_;
+
+  //create example matrix for predicted measurement covariance
+  MatrixXd S_;
+
+    ///* state covariance matrix
   MatrixXd P_;
 
   ///* predicted sigma points matrix
   MatrixXd Xsig_pred_;
+
+  MatrixXd R_radar_;
+  MatrixXd R_lidar_;
+
 
   ///* time when the state is true, in us
   long long time_us_;
@@ -59,8 +69,14 @@ public:
   ///* Weights of sigma points
   VectorXd weights_;
 
+  int n_sig_;
+
   ///* State dimension
   int n_x_;
+
+  int n_z_;
+
+  int cnt;
 
   ///* Augmented state dimension
   int n_aug_;
@@ -95,6 +111,11 @@ public:
    * matrix
    * @param delta_t Time between k and k+1 in s
    */
+
+
+
+
+
   void Prediction(double delta_t);
 
   /**
@@ -108,6 +129,13 @@ public:
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
+
+  void UpdateUKF(MeasurementPackage meas_package, MatrixXd Zsig, int n_z);
+
+  void NormAng(double *ang);
+
+
 };
 
 #endif /* UKF_H */
+
